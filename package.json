@@ -1,7 +1,7 @@
 {
   "name": "claude-statusline",
   "version": "1.1.0",
-  "description": "A status line for Claude Code CLI showing model, context usage, rate limits, and more",
+  "description": "A status line for Claude Code CLI showing model, context usage, rate limits, cost, and more",
   "bin": {
     "claude-statusline": "./bin/install.js"
   },
@@ -11,6 +11,5 @@
     "statusline",
     "cli"
   ],
-  "license": "MIT",
-  "author": "claude-statusline contributors"
+  "license": "MIT"
 }

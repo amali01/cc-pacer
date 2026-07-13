@@ -21,10 +21,10 @@ Costs are estimates computed locally from your transcripts (tokens × current AP
 
 ## Install
 
-Run the command below to set it up
+Run the installer from a checkout of this repo:
 
 ```bash
-npx claude-statusline
+node bin/install.js
 ```
 
 It backups your old status line if any and copies the status line script to `~/.claude/statusline.sh` and configures your Claude Code settings.
@@ -44,7 +44,7 @@ brew install jq
 ## Uninstall
 
 ```bash
-npx claude-statusline --uninstall
+node bin/install.js --uninstall
 ```
 
 If you had a previous statusline, it restores it from the backup. Otherwise it removes the script and cleans up your settings.
