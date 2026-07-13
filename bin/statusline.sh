@@ -247,9 +247,11 @@ if [ -n "$stdin_five_pct" ]; then
 fi
 
 # ── Fallback: API call (cached) ────────────────────────
-cache_file="/tmp/claude/statusline-usage-cache.json"
+# per-user, 0700: caches hold spend figures and must not be shared across users
+cache_dir="/tmp/claude-statusline-${UID:-$(id -u)}"
+mkdir -p -m 700 "$cache_dir"
+cache_file="$cache_dir/usage-cache.json"
 cache_max_age=60
-mkdir -p /tmp/claude
 
 usage_data=""
 extra_enabled="false"
@@ -341,8 +343,8 @@ day_start=$(date -d "today 00:00" +%s 2>/dev/null || date -j -f "%H:%M" "00:00" 
 month_start=$(date -d "$(date +%Y-%m-01) 00:00" +%s 2>/dev/null || date -j -f "%Y-%m-%d %H:%M" "$(date +%Y-%m)-01 00:00" +%s 2>/dev/null)
 scan_cutoff=$(( week_start < month_start ? week_start : month_start ))
 
-cost_cache="/tmp/claude/statusline-cost-cache"
-cost_lock="/tmp/claude/statusline-cost.lock"
+cost_cache="$cache_dir/cost-cache"
+cost_lock="$cache_dir/cost.lock"
 
 scan_costs() {
     # BSD find has no -newermt "@epoch"; stamp a reference file instead (POSIX -newer)
