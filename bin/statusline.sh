@@ -301,10 +301,12 @@ if ! $has_stdin_rates; then
         fi
 
         if [ -n "$token" ] && [ "$token" != "null" ]; then
-            response=$(curl -s --max-time 5 \
+            # pass the bearer token via a stdin-fed header so it never appears
+            # in the process table (visible to any user via `ps`)
+            response=$(printf 'Authorization: Bearer %s\n' "$token" | curl -s --max-time 5 \
                 -H "Accept: application/json" \
                 -H "Content-Type: application/json" \
-                -H "Authorization: Bearer $token" \
+                -H @- \
                 -H "anthropic-beta: oauth-2025-04-20" \
                 -H "User-Agent: claude-code/2.1.34" \
                 "https://api.anthropic.com/api/oauth/usage" 2>/dev/null)
