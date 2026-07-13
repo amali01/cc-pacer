@@ -362,7 +362,7 @@ scan_costs() {
           (.message.usage.cache_creation.ephemeral_1h_input_tokens // 0),
           (.message.usage.cache_read_input_tokens // 0),
           (.costUSD // "") ] | @tsv' 2>/dev/null |
-    awk -F'\t' -v bs="$block_start" -v ds="$day_start" -v ws="$week_start" -v ms="$month_start" '
+    awk -F'\t' -v bs="$block_start" -v ds="$day_start" -v ws="$week_start" -v ms="$month_start" -v nowts="$now" '
         # ponytail: pattern-matched pricing table (per MTok); legacy opus (<=4.4, opus 3)
         # was $15/$75, opus 4.5+ is $5/$25; unknown models bill at current opus rates
         function pin(m)  { if (m ~ /fable|mythos/) return 10; if (m ~ /haiku/) return 1; if (m ~ /sonnet/) return 3; if (m ~ /opus-4-[0-4]|opus-3|3-opus/) return 15; return 5 }
@@ -375,9 +375,9 @@ scan_costs() {
             if (ts >= ms) month += c
             if (ts >= ws) week += c
             if (ts >= ds) day += c
-            if (ts >= bs) { block += c; if (!bf || ts < bf) bf = ts; if (ts > bl) bl = ts }
+            if (ts >= bs) { block += c; if (!bf || ts < bf) bf = ts }
         }
-        END { printf "%.4f %.4f %.4f %.4f %d\n", block, day, week, month, (bl > bf ? (bl - bf) / 60 : 0) }'
+        END { printf "%.4f %.4f %.4f %.4f %d\n", block, day, week, month, (bf && nowts > bf ? (nowts - bf) / 60 : 0) }'
 }
 
 cost_fresh=false
