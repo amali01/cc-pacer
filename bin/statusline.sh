@@ -139,6 +139,17 @@ cache_create=${cache_create:-0}
 cache_read=${cache_read:-0}
 [[ "$size" =~ ^[1-9][0-9]*$ ]] || size=200000
 
+# rate-limit fields feed arithmetic and printf — keep them numeric.
+# resets_at is an epoch today; tolerate an ISO timestamp if that ever changes.
+[[ "$stdin_five_pct" =~ ^[0-9.]+$ ]] || stdin_five_pct=""
+[[ "$stdin_seven_pct" =~ ^[0-9.]+$ ]] || stdin_seven_pct=""
+if [ -n "$five_hour_reset_epoch" ] && ! [[ "$five_hour_reset_epoch" =~ ^[0-9]+$ ]]; then
+    five_hour_reset_epoch=$(iso_to_epoch "$five_hour_reset_epoch")
+fi
+if [ -n "$seven_day_reset_epoch" ] && ! [[ "$seven_day_reset_epoch" =~ ^[0-9]+$ ]]; then
+    seven_day_reset_epoch=$(iso_to_epoch "$seven_day_reset_epoch")
+fi
+
 if [ -n "$stdin_ctx_pct" ]; then
     pct_used=$(printf "%.0f" "$stdin_ctx_pct")
 else
