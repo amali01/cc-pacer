@@ -1,4 +1,13 @@
-# claude-statusline
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="logo/cc-pacer-logo-dark.svg">
+    <img src="logo/cc-pacer-logo.svg" alt="cc-pacer" width="150">
+  </picture>
+</p>
+
+<h1 align="center">cc-pacer</h1>
+
+<p align="center"><em>Know your pace before you hit the wall.</em></p>
 
 Configure your Claude Code statusline to show limits, cost, directory and git info
 
@@ -27,7 +36,7 @@ Run the installer from a checkout of this repo:
 node bin/install.js
 ```
 
-It backups your old status line if any and copies the status line script to `~/.claude/statusline.sh` and configures your Claude Code settings.
+It backups your old status line if any and copies the status line script to `~/.claude/cc-pacer.sh` and configures your Claude Code settings.
 
 ## Requirements
 

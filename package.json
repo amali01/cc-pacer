@@ -1,9 +1,9 @@
 {
-  "name": "claude-statusline",
+  "name": "cc-pacer",
   "version": "1.1.0",
-  "description": "A status line for Claude Code CLI showing model, context usage, rate limits, cost, and more",
+  "description": "Know your pace before you hit the wall — a Claude Code statusline for usage rate, pace projection, and cost.",
   "bin": {
-    "claude-statusline": "./bin/install.js"
+    "cc-pacer": "./bin/install.js"
   },
   "keywords": [
     "claude",

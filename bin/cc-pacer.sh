@@ -279,7 +279,7 @@ fi
 # per-user, 0700: caches hold spend figures and must not be shared across users
 # cache dir is per-user and per-config-dir so multiple accounts don't share figures
 cfg_hash=$(printf '%s' "$config_dir" | cksum | cut -d' ' -f1)
-cache_dir="/tmp/claude-statusline-${UID:-$(id -u)}/$cfg_hash"
+cache_dir="/tmp/cc-pacer-${UID:-$(id -u)}/$cfg_hash"
 mkdir -p -m 700 "$cache_dir"
 cache_file="$cache_dir/usage-cache.json"
 cache_max_age=60

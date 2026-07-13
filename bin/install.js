@@ -6,8 +6,8 @@ const os = require("os");
 
 const CLAUDE_DIR = path.join(os.homedir(), ".claude");
 const SETTINGS_FILE = path.join(CLAUDE_DIR, "settings.json");
-const STATUSLINE_DEST = path.join(CLAUDE_DIR, "statusline.sh");
-const STATUSLINE_SRC = path.resolve(__dirname, "statusline.sh");
+const STATUSLINE_DEST = path.join(CLAUDE_DIR, "cc-pacer.sh");
+const STATUSLINE_SRC = path.resolve(__dirname, "cc-pacer.sh");
 
 const blue = "\x1b[38;2;0;153;255m";
 const green = "\x1b[38;2;0;175;80m";
@@ -59,8 +59,8 @@ function checkDeps() {
 
 function uninstall() {
   console.log();
-  console.log(`  ${blue}Claude Line Uninstaller${reset}`);
-  console.log(`  ${dim}───────────────────────${reset}`);
+  console.log(`  ${blue}cc-pacer Uninstaller${reset}`);
+  console.log(`  ${dim}────────────────────${reset}`);
   console.log();
 
   const backup = STATUSLINE_DEST + ".bak";
@@ -68,10 +68,10 @@ function uninstall() {
   if (fs.existsSync(backup)) {
     fs.copyFileSync(backup, STATUSLINE_DEST);
     fs.unlinkSync(backup);
-    success(`Restored previous statusline from ${dim}statusline.sh.bak${reset}`);
+    success(`Restored previous statusline from ${dim}cc-pacer.sh.bak${reset}`);
   } else if (fs.existsSync(STATUSLINE_DEST)) {
     fs.unlinkSync(STATUSLINE_DEST);
-    success(`Removed ${dim}statusline.sh${reset}`);
+    success(`Removed ${dim}cc-pacer.sh${reset}`);
   } else {
     warn("No statusline found — nothing to remove");
   }
@@ -104,8 +104,8 @@ function run() {
   }
 
   console.log();
-  console.log(`  ${blue}Claude Line Installer${reset}`);
-  console.log(`  ${dim}─────────────────────${reset}`);
+  console.log(`  ${blue}cc-pacer Installer${reset}`);
+  console.log(`  ${dim}──────────────────${reset}`);
   console.log();
 
   const missing = checkDeps();
@@ -127,7 +127,7 @@ function run() {
   const backup = STATUSLINE_DEST + ".bak";
   if (fs.existsSync(STATUSLINE_DEST)) {
     fs.copyFileSync(STATUSLINE_DEST, backup);
-    warn(`Backed up existing statusline to ${dim}statusline.sh.bak${reset}`);
+    warn(`Backed up existing statusline to ${dim}cc-pacer.sh.bak${reset}`);
   }
 
   fs.copyFileSync(STATUSLINE_SRC, STATUSLINE_DEST);
@@ -146,7 +146,7 @@ function run() {
 
   const statusLineConfig = {
     type: "command",
-    command: 'bash "$HOME/.claude/statusline.sh"',
+    command: 'bash "$HOME/.claude/cc-pacer.sh"',
   };
 
   if (
