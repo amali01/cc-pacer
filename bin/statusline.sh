@@ -115,6 +115,22 @@ fmt_cost() {
     awk -v c="$1" 'BEGIN { if (c >= 100) printf "$%d", c; else printf "$%.2f", c }'
 }
 
+# Project end-of-window utilization from the pace so far, so being ahead of
+# pace flags early even at low absolute use. Prints the projected integer %
+# (capped 200) when it materially exceeds actual and the sample is meaningful;
+# prints nothing otherwise (caller then colors by the actual %).
+#   $1 used%  $2 reset_epoch  $3 window_seconds  $4 min_used% to bother
+project_pct() {
+    awk -v used="$1" -v reset="$2" -v win="$3" -v minu="$4" -v now="$(date +%s)" 'BEGIN {
+        if (reset <= 0 || used < minu) exit
+        elapsed = win - (reset - now)
+        if (elapsed < 180 || elapsed >= win) exit
+        proj = used * win / elapsed
+        if (proj > 200) proj = 200
+        if (proj >= used + 5) printf "%d", proj
+    }'
+}
+
 # ── Extract stdin (single jq pass) ─────────────────────
 eval "$(echo "$input" | jq -r '@sh "
 model_name=\(.model.display_name // "Claude")
@@ -472,10 +488,13 @@ fi
 if [ -n "$five_hour_pct" ]; then
     five_hour_reset=$(format_epoch_time "$five_hour_reset_epoch" "time")
     five_hour_bar=$(build_bar "$five_hour_pct" "$bar_width")
-    five_hour_pct_color=$(color_for_pct "$five_hour_pct")
     five_hour_pct_fmt=$(printf "%3d" "$five_hour_pct")
+    # color the % by projected end-of-window usage (pace), not just the raw number
+    five_hour_proj=$(project_pct "$five_hour_pct" "${five_hour_reset_epoch:-0}" 18000 5)
+    five_hour_pct_color=$(color_for_pct "${five_hour_proj:-$five_hour_pct}")
 
     rate_lines+="${white}current${reset} ${five_hour_bar} ${five_hour_pct_color}${five_hour_pct_fmt}%${reset}"
+    [ -n "$five_hour_proj" ] && rate_lines+="${dim}→${reset}${five_hour_pct_color}${five_hour_proj}%${reset}"
     [ -n "$five_hour_reset" ] && rate_lines+=" ${dim}⟳${reset} ${white}${five_hour_reset}${reset}"
     if $have_costs; then
         rate_lines+=" ${dim}·${reset} ${white}$(fmt_cost "$block_cost")${reset}"
@@ -486,11 +505,13 @@ fi
 if [ -n "$seven_day_pct" ]; then
     seven_day_reset=$(format_epoch_time "$seven_day_reset_epoch" "datetime")
     seven_day_bar=$(build_bar "$seven_day_pct" "$bar_width")
-    seven_day_pct_color=$(color_for_pct "$seven_day_pct")
     seven_day_pct_fmt=$(printf "%3d" "$seven_day_pct")
+    seven_day_proj=$(project_pct "$seven_day_pct" "${seven_day_reset_epoch:-0}" 604800 20)
+    seven_day_pct_color=$(color_for_pct "${seven_day_proj:-$seven_day_pct}")
 
     [ -n "$rate_lines" ] && rate_lines+="\n"
     rate_lines+="${white}weekly${reset}  ${seven_day_bar} ${seven_day_pct_color}${seven_day_pct_fmt}%${reset}"
+    [ -n "$seven_day_proj" ] && rate_lines+="${dim}→${reset}${seven_day_pct_color}${seven_day_proj}%${reset}"
     [ -n "$seven_day_reset" ] && rate_lines+=" ${dim}⟳${reset} ${white}${seven_day_reset}${reset}"
     $have_costs && rate_lines+=" ${dim}·${reset} ${white}$(fmt_cost "$week_cost")${reset}"
 fi
