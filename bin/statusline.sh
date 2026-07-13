@@ -131,7 +131,13 @@ stdin_seven_pct=\(.rate_limits.seven_day.used_percentage // "")
 seven_day_reset_epoch=\(.rate_limits.seven_day.resets_at // "")
 "' 2>/dev/null)"
 
-[ "$size" -eq 0 ] 2>/dev/null && size=200000
+# jq's @sh is all-or-nothing: on malformed stdin or an unexpected non-scalar
+# field every variable above is left unset — re-establish safe defaults
+model_name=${model_name:-Claude}
+input_tokens=${input_tokens:-0}
+cache_create=${cache_create:-0}
+cache_read=${cache_read:-0}
+[[ "$size" =~ ^[1-9][0-9]*$ ]] || size=200000
 
 if [ -n "$stdin_ctx_pct" ]; then
     pct_used=$(printf "%.0f" "$stdin_ctx_pct")
