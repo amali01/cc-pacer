@@ -275,6 +275,24 @@ if ! $has_stdin_rates; then
         fi
     fi
 
+    # negative cache: after an API error, skip fetching until retry_until.
+    # a new session (started after the error) forces a retry so a fixed
+    # auth problem clears on relogin.
+    api_error=""
+    backoff_file="$cache_dir/api-backoff"
+    if $needs_refresh && [ -f "$backoff_file" ]; then
+        IFS=$'\t' read -r retry_until api_error < "$backoff_file" 2>/dev/null
+        sess_epoch=$(iso_to_epoch "$session_start" 2>/dev/null)
+        bo_mtime=$(stat -c %Y "$backoff_file" 2>/dev/null || stat -f %m "$backoff_file" 2>/dev/null)
+        if [ -n "$sess_epoch" ] && [ "${sess_epoch:-0}" -gt "${bo_mtime:-0}" ]; then
+            rm -f "$backoff_file"; api_error=""
+        elif [ "${retry_until:-0}" -gt "$(date +%s)" ]; then
+            needs_refresh=false
+        else
+            api_error=""
+        fi
+    fi
+
     if $needs_refresh; then
         token=""
         if [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
@@ -304,16 +322,30 @@ if ! $has_stdin_rates; then
             # pass the bearer token via a stdin-fed header so it never appears
             # in the process table (visible to any user via `ps`)
             response=$(printf 'Authorization: Bearer %s\n' "$token" | curl -s --max-time 5 \
+                -w '\n%{http_code}' \
                 -H "Accept: application/json" \
                 -H "Content-Type: application/json" \
                 -H @- \
                 -H "anthropic-beta: oauth-2025-04-20" \
                 -H "User-Agent: claude-code/2.1.34" \
                 "https://api.anthropic.com/api/oauth/usage" 2>/dev/null)
-            if [ -n "$response" ] && echo "$response" | jq -e '.five_hour' >/dev/null 2>&1; then
+            http_code="${response##*$'\n'}"
+            response="${response%$'\n'*}"
+            if [ "$http_code" = "200" ] && echo "$response" | jq -e '.five_hour' >/dev/null 2>&1; then
                 usage_data="$response"
                 # write atomically so a concurrent reader never sees a torn file
                 printf '%s' "$response" > "${cache_file}.tmp" && mv -f "${cache_file}.tmp" "$cache_file"
+                rm -f "$backoff_file"
+            else
+                # back off so we don't hammer the endpoint (and rate-limit ourselves).
+                # auth errors are effectively permanent until relogin; others are transient.
+                case "$http_code" in
+                    401|403) backoff=86400; api_error="⚠ auth (${http_code})" ;;
+                    429)     backoff=300;   api_error="⚠ 429 rate limited" ;;
+                    000|"")  backoff=30;    api_error="" ;;
+                    *)       backoff=120;   api_error="⚠ api ${http_code}" ;;
+                esac
+                printf '%s\t%s' "$(( $(date +%s) + backoff ))" "$api_error" > "$backoff_file"
             fi
         fi
         if [ -z "$usage_data" ] && [ -f "$cache_file" ]; then
@@ -431,6 +463,11 @@ fi
 # ── Rate limit lines ────────────────────────────────────
 rate_lines=""
 bar_width=10
+
+# no rate-limit data but the API told us why — show a dim hint instead of nothing
+if [ -z "$five_hour_pct" ] && [ -n "$api_error" ]; then
+    rate_lines+="${dim}${api_error}${reset}"
+fi
 
 if [ -n "$five_hour_pct" ]; then
     five_hour_reset=$(format_epoch_time "$five_hour_reset_epoch" "time")
