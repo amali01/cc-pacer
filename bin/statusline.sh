@@ -2,6 +2,9 @@
 set -f
 export LC_NUMERIC=C  # stdin floats use dot decimals; comma-decimal locales break printf %.0f
 
+# honor a custom Claude config dir (multi-account / non-default installs)
+config_dir="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
+
 input=$(cat)
 
 if [ -z "$input" ]; then
@@ -160,7 +163,7 @@ fi
 
 # effort from stdin; settings.json fallback (also read voice toggle in the same pass)
 voice_on=false
-settings_path="$HOME/.claude/settings.json"
+settings_path="$config_dir/settings.json"
 if [ -f "$settings_path" ]; then
     IFS=$'\t' read -r settings_effort voice_on <<< "$(jq -r '[(.effortLevel // "default"), (.voice.enabled // false)] | @tsv' "$settings_path" 2>/dev/null)"
 fi
@@ -249,7 +252,9 @@ fi
 
 # ── Fallback: API call (cached) ────────────────────────
 # per-user, 0700: caches hold spend figures and must not be shared across users
-cache_dir="/tmp/claude-statusline-${UID:-$(id -u)}"
+# cache dir is per-user and per-config-dir so multiple accounts don't share figures
+cfg_hash=$(printf '%s' "$config_dir" | cksum | cut -d' ' -f1)
+cache_dir="/tmp/claude-statusline-${UID:-$(id -u)}/$cfg_hash"
 mkdir -p -m 700 "$cache_dir"
 cache_file="$cache_dir/usage-cache.json"
 cache_max_age=60
@@ -281,7 +286,7 @@ if ! $has_stdin_rates; then
             fi
         fi
         if [ -z "$token" ] || [ "$token" = "null" ]; then
-            creds_file="${HOME}/.claude/.credentials.json"
+            creds_file="$config_dir/.credentials.json"
             if [ -f "$creds_file" ]; then
                 token=$(jq -r '.claudeAiOauth.accessToken // empty' "$creds_file" 2>/dev/null)
             fi
@@ -352,7 +357,7 @@ scan_costs() {
     local ref="${cost_cache}.ref"
     touch -d "@$scan_cutoff" "$ref" 2>/dev/null ||
         touch -t "$(date -j -r "$scan_cutoff" +%Y%m%d%H%M.%S 2>/dev/null)" "$ref" 2>/dev/null || return
-    find "$HOME/.claude/projects" -name '*.jsonl' -newer "$ref" -print0 2>/dev/null |
+    find "$config_dir/projects" -name '*.jsonl' -newer "$ref" -print0 2>/dev/null |
     xargs -0 -r -n1 jq -rR '
         fromjson? |
         select(.type == "assistant" and .message.usage != null) |
