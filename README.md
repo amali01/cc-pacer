@@ -15,9 +15,9 @@ What you get, no configuration needed:
 
 - **Line 1** — model, context %, directory + git branch (`*` = dirty, `⚡` = `--dangerously-skip-permissions`), session duration + session cost, lines added/removed, reasoning effort, and two toggles: 🎙 voice mode and 🖥 remote control (green = on).
 - **Meters** — your official 5-hour and weekly rate-limit windows with reset times, each annotated with what that usage would have cost on the API. `🔥 $/hr` is your burn rate over the current 5-hour block.
-- **month** — your calendar-month API-equivalent spend and today's total. If you pay for extra usage, that meter still shows too.
+- **month** — your calendar-month API-equivalent spend and today's total. An extra-usage meter appears too when that data is available (it comes from the usage API fallback below).
 
-Costs are estimates computed locally from your `~/.claude/projects` transcripts (tokens × current API pricing, cached for 60s) — nothing leaves your machine, and no extra tools are needed.
+Costs are estimates computed locally from your `~/.claude/projects` transcripts (tokens × current API pricing, cached for 60s). When Claude Code doesn't provide rate-limit data on stdin (older versions), the script falls back to fetching it from Anthropic's usage API using your existing Claude Code credentials — that is the only network request it ever makes. Requires `jq` (see below).
 
 ## Install
 
