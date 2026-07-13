@@ -377,13 +377,20 @@ scan_costs() {
             if (ts >= ds) day += c
             if (ts >= bs) { block += c; if (!bf || ts < bf) bf = ts }
         }
-        END { printf "%.4f %.4f %.4f %.4f %d\n", block, day, week, month, (bf && nowts > bf ? (nowts - bf) / 60 : 0) }'
+        END { printf "%.4f %.4f %.4f %.4f %d %d\n", block, day, week, month, (bf && nowts > bf ? (nowts - bf) / 60 : 0), bs }'
 }
 
 cost_fresh=false
 if [ -f "$cost_cache" ]; then
+    read -r block_cost day_cost week_cost month_cost block_elapsed_min cached_bs < "$cost_cache"
     cc_mtime=$(stat -c %Y "$cost_cache" 2>/dev/null || stat -f %m "$cost_cache" 2>/dev/null)
-    [ $(( now - cc_mtime )) -lt 60 ] && cost_fresh=true
+    if [ $(( now - cc_mtime )) -lt 60 ]; then
+        # a cache bucketed for a different 5h window (other session type, or just
+        # after a reset) is stale even within the TTL; rolling windows accept TTL only
+        if [ -z "$five_hour_reset_epoch" ] || [ "${cached_bs:-0}" = "$block_start" ]; then
+            cost_fresh=true
+        fi
+    fi
 fi
 
 if ! $cost_fresh; then
@@ -398,8 +405,8 @@ if ! $cost_fresh; then
     fi
 fi
 
-if [ -f "$cost_cache" ]; then
-    read -r block_cost day_cost week_cost month_cost block_elapsed_min < "$cost_cache"
+if ! $cost_fresh && [ -f "$cost_cache" ]; then
+    read -r block_cost day_cost week_cost month_cost block_elapsed_min cached_bs < "$cost_cache"
 fi
 
 have_costs=false
