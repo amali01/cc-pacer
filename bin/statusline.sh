@@ -333,7 +333,8 @@ scan_costs() {
     touch -d "@$scan_cutoff" "$ref" 2>/dev/null ||
         touch -t "$(date -j -r "$scan_cutoff" +%Y%m%d%H%M.%S 2>/dev/null)" "$ref" 2>/dev/null || return
     find "$HOME/.claude/projects" -name '*.jsonl' -newer "$ref" -print0 2>/dev/null |
-    xargs -0 -r jq -r '
+    xargs -0 -r -n1 jq -rR '
+        fromjson? |
         select(.type == "assistant" and .message.usage != null) |
         [ (try (.timestamp | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601) catch 0),
           (.requestId // .uuid // ""),
