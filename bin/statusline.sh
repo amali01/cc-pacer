@@ -312,7 +312,8 @@ if ! $has_stdin_rates; then
                 "https://api.anthropic.com/api/oauth/usage" 2>/dev/null)
             if [ -n "$response" ] && echo "$response" | jq -e '.five_hour' >/dev/null 2>&1; then
                 usage_data="$response"
-                echo "$response" > "$cache_file"
+                # write atomically so a concurrent reader never sees a torn file
+                printf '%s' "$response" > "${cache_file}.tmp" && mv -f "${cache_file}.tmp" "$cache_file"
             fi
         fi
         if [ -z "$usage_data" ] && [ -f "$cache_file" ]; then
