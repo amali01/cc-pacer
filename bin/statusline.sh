@@ -192,10 +192,18 @@ dirname=$(basename "$cwd")
 
 git_branch=""
 git_dirty=""
+git_ahead_behind=""
 if git -C "$cwd" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     git_branch=$(git -C "$cwd" symbolic-ref --short HEAD 2>/dev/null)
     if [ -n "$(git -C "$cwd" --no-optional-locks status --porcelain 2>/dev/null)" ]; then
         git_dirty="*"
+    fi
+    # commits ahead/behind the upstream, if the branch tracks one
+    ab=$(git -C "$cwd" rev-list --left-right --count '@{u}...HEAD' 2>/dev/null)
+    if [ -n "$ab" ]; then
+        behind=${ab%%[[:space:]]*}; ahead=${ab##*[[:space:]]}
+        [ "${ahead:-0}" -gt 0 ] 2>/dev/null && git_ahead_behind+="↑${ahead}"
+        [ "${behind:-0}" -gt 0 ] 2>/dev/null && git_ahead_behind+="↓${behind}"
     fi
 fi
 
@@ -228,6 +236,7 @@ line1+="${sep}"
 line1+="${skip_perms}${cyan}${dirname}${reset}"
 if [ -n "$git_branch" ]; then
     line1+=" ${green}(${git_branch}${red}${git_dirty}${green})${reset}"
+    [ -n "$git_ahead_behind" ] && line1+=" ${dim}${git_ahead_behind}${reset}"
 fi
 if [ -n "$session_duration" ]; then
     line1+="${sep}"
