@@ -328,7 +328,11 @@ cost_cache="/tmp/claude/statusline-cost-cache"
 cost_lock="/tmp/claude/statusline-cost.lock"
 
 scan_costs() {
-    find "$HOME/.claude/projects" -name '*.jsonl' -newermt "@$scan_cutoff" -print0 2>/dev/null |
+    # BSD find has no -newermt "@epoch"; stamp a reference file instead (POSIX -newer)
+    local ref="${cost_cache}.ref"
+    touch -d "@$scan_cutoff" "$ref" 2>/dev/null ||
+        touch -t "$(date -j -r "$scan_cutoff" +%Y%m%d%H%M.%S 2>/dev/null)" "$ref" 2>/dev/null || return
+    find "$HOME/.claude/projects" -name '*.jsonl' -newer "$ref" -print0 2>/dev/null |
     xargs -0 -r jq -r '
         select(.type == "assistant" and .message.usage != null) |
         [ (try (.timestamp | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601) catch 0),
