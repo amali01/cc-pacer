@@ -1,5 +1,6 @@
 #!/bin/bash
 set -f
+export LC_NUMERIC=C  # stdin floats use dot decimals; comma-decimal locales break printf %.0f
 
 input=$(cat)
 
