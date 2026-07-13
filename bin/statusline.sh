@@ -363,9 +363,10 @@ scan_costs() {
           (.message.usage.cache_read_input_tokens // 0),
           (.costUSD // "") ] | @tsv' 2>/dev/null |
     awk -F'\t' -v bs="$block_start" -v ds="$day_start" -v ws="$week_start" -v ms="$month_start" '
-        # ponytail: pattern-matched pricing table (per MTok), unknown models bill as opus
-        function pin(m)  { if (m ~ /fable|mythos/) return 10; if (m ~ /haiku/) return 1; if (m ~ /sonnet/) return 3; return 5 }
-        function pout(m) { if (m ~ /fable|mythos/) return 50; if (m ~ /haiku/) return 5; if (m ~ /sonnet/) return 15; return 25 }
+        # ponytail: pattern-matched pricing table (per MTok); legacy opus (<=4.4, opus 3)
+        # was $15/$75, opus 4.5+ is $5/$25; unknown models bill at current opus rates
+        function pin(m)  { if (m ~ /fable|mythos/) return 10; if (m ~ /haiku/) return 1; if (m ~ /sonnet/) return 3; if (m ~ /opus-4-[0-4]|opus-3|3-opus/) return 15; return 5 }
+        function pout(m) { if (m ~ /fable|mythos/) return 50; if (m ~ /haiku/) return 5; if (m ~ /sonnet/) return 15; if (m ~ /opus-4-[0-4]|opus-3|3-opus/) return 75; return 25 }
         {
             if ($1 == 0 || $2 == "" || seen[$2]++) next
             ts = $1
