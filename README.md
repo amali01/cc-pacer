@@ -33,7 +33,7 @@ Costs are estimates computed locally from your transcripts (tokens × current AP
 One-liner, no checkout needed:
 
 ```bash
-npx github:amali01/cc-pacer
+npx cc-pacer
 ```
 
 Or from a checkout of this repo:
