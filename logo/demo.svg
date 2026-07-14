@@ -26,11 +26,12 @@
   <g fill="#3a3f45"><!-- track -->
     <circle cx="150" cy="125" r="7"/><circle cx="174" cy="125" r="7"/><circle cx="198" cy="125" r="7"/><circle cx="222" cy="125" r="7"/><circle cx="246" cy="125" r="7"/><circle cx="270" cy="125" r="7"/><circle cx="294" cy="125" r="7"/><circle cx="318" cy="125" r="7"/><circle cx="342" cy="125" r="7"/><circle cx="366" cy="125" r="7"/>
   </g>
-  <g fill="#e3b341" clip-path="url(#fillCurrent)"><!-- fill -->
+  <g fill="#00af50" clip-path="url(#fillCurrent)"><!-- fill: green -> orange as it crosses 50% -->
+    <animate attributeName="fill" values="#00af50;#ffb055;#ffb055;#00af50" keyTimes="0;0.187;0.9;1" calcMode="discrete" dur="6s" repeatCount="indefinite"/>
     <circle cx="150" cy="125" r="7"/><circle cx="174" cy="125" r="7"/><circle cx="198" cy="125" r="7"/><circle cx="222" cy="125" r="7"/><circle cx="246" cy="125" r="7"/><circle cx="270" cy="125" r="7"/><circle cx="294" cy="125" r="7"/><circle cx="318" cy="125" r="7"/><circle cx="342" cy="125" r="7"/><circle cx="366" cy="125" r="7"/>
   </g>
-  <text x="390" y="132" font-size="19" fill="#e3b341">67%</text>
-  <text x="437" y="132" font-size="19" fill="#e3b341" opacity="0">→120%
+  <text x="390" y="132" font-size="19" fill="#ff5555">67%</text>
+  <text x="437" y="132" font-size="19" fill="#ff5555" opacity="0">→120%
     <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.25;0.33;0.9;1" dur="6s" repeatCount="indefinite"/>
   </text>
   <text x="540" y="132" font-size="19"><tspan fill="#6e7781">⟳ </tspan><tspan fill="#dcdcdc">2:50am</tspan><tspan fill="#6e7781"> · </tspan><tspan fill="#dcdcdc">$81</tspan><tspan fill="#e3b341"> 🔥 $16/hr</tspan></text>
@@ -40,11 +41,12 @@
   <g fill="#3a3f45">
     <circle cx="150" cy="170" r="7"/><circle cx="174" cy="170" r="7"/><circle cx="198" cy="170" r="7"/><circle cx="222" cy="170" r="7"/><circle cx="246" cy="170" r="7"/><circle cx="270" cy="170" r="7"/><circle cx="294" cy="170" r="7"/><circle cx="318" cy="170" r="7"/><circle cx="342" cy="170" r="7"/><circle cx="366" cy="170" r="7"/>
   </g>
-  <g fill="#e3b341" clip-path="url(#fillWeekly)">
+  <g fill="#00af50" clip-path="url(#fillWeekly)"><!-- fill: green -> orange -> yellow -->
+    <animate attributeName="fill" values="#00af50;#ffb055;#e6c800;#e6c800;#00af50" keyTimes="0;0.192;0.269;0.9;1" calcMode="discrete" dur="6s" repeatCount="indefinite"/>
     <circle cx="150" cy="170" r="7"/><circle cx="174" cy="170" r="7"/><circle cx="198" cy="170" r="7"/><circle cx="222" cy="170" r="7"/><circle cx="246" cy="170" r="7"/><circle cx="270" cy="170" r="7"/><circle cx="294" cy="170" r="7"/><circle cx="318" cy="170" r="7"/><circle cx="342" cy="170" r="7"/><circle cx="366" cy="170" r="7"/>
   </g>
-  <text x="390" y="177" font-size="19" fill="#e3b341">73%</text>
-  <text x="437" y="177" font-size="19" fill="#e3b341" opacity="0">→124%
+  <text x="390" y="177" font-size="19" fill="#ff5555">73%</text>
+  <text x="437" y="177" font-size="19" fill="#ff5555" opacity="0">→124%
     <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.28;0.36;0.9;1" dur="6s" repeatCount="indefinite"/>
   </text>
   <text x="540" y="177" font-size="19"><tspan fill="#6e7781">⟳ </tspan><tspan fill="#dcdcdc">jul 16, 10:00pm</tspan><tspan fill="#6e7781"> · </tspan><tspan fill="#dcdcdc">$100</tspan></text>
