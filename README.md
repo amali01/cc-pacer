@@ -30,7 +30,18 @@ What you get, no configuration needed:
 - **Meters** — your official 5-hour and weekly rate-limit windows with reset times, each annotated with what that usage would have cost on the API. The percentage is colored by your projected end-of-window usage (`→68%`) so being ahead of pace flags early. `🔥 $/hr` is your burn rate over the current 5-hour block.
 - **month** — your calendar-month API-equivalent spend and today's total. An extra-usage meter appears too when that data is available (it comes from the usage API fallback below).
 
-Costs are estimates computed locally from your transcripts (tokens × current API pricing, cached for 60s). When Claude Code doesn't provide rate-limit data on stdin (older versions), the script falls back to fetching it from Anthropic's usage API using your existing Claude Code credentials — that is the only network request it ever makes. Honors `CLAUDE_CONFIG_DIR` if you keep Claude's config outside `~/.claude`. Requires `jq` (see below).
+### Beyond the basics
+
+- **Pace projection** — meters aren't colored by raw usage but by where you're *projected* to land at the window reset (`67%→120%`), so you get an early warning while there's still time to ease off.
+- **Reasoning-effort dial** — a glyph that tracks your current effort level: `●` high/max (magenta), `◑` medium, `◔` low.
+- **Commits ahead/behind** — `↑n↓n` against your branch's upstream, so you see unpushed/unpulled work at a glance.
+- **Burn rate** — `🔥 $/hr` measured over the live 5-hour block (against wall-clock now, not the last transcript entry).
+- **Extra-usage meter** — appears automatically when your account has extra usage enabled, showing utilization and credit spend.
+- **Accurate pricing** — per-model rates including legacy Opus billing ($15/$75) and cache-read/write tiers, so the API-equivalent estimate reflects what you'd actually be charged.
+- **Graceful under failure** — malformed stdin degrades to sane defaults instead of blanking; a failed usage-API call backs off and shows a compact hint (`⚠ auth`, `⚠ 429 rate limited`) rather than silently disappearing.
+- **Portable & private** — honors `CLAUDE_CONFIG_DIR`, caches to a per-user `0700` dir, and passes your OAuth token to `curl` via stdin (never argv).
+
+Costs are estimates computed locally from your transcripts (tokens × current API pricing, cached for 60s). When Claude Code doesn't provide rate-limit data on stdin (older versions), the script falls back to fetching it from Anthropic's usage API using your existing Claude Code credentials — that is the only network request it ever makes. Requires `jq` (see below).
 
 ## Install
 

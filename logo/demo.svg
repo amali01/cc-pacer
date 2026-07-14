@@ -18,7 +18,7 @@
 
   <!-- line 1 -->
   <text x="30" y="80" font-size="19">
-    <tspan fill="#0099ff">Opus 4.8</tspan><tspan fill="#484f58"> │ </tspan><tspan fill="#dcdcdc">✍ 8%</tspan><tspan fill="#484f58"> │ </tspan><tspan fill="#56b6c2">cc-pacer</tspan><tspan fill="#00af50"> (main)</tspan><tspan fill="#484f58"> │ </tspan><tspan fill="#00af50">+194</tspan><tspan fill="#484f58">/</tspan><tspan fill="#ff5555">-18</tspan><tspan fill="#484f58"> │ </tspan><tspan fill="#8b949e">◑ medium</tspan>
+    <tspan fill="#0099ff">Opus 4.8</tspan><tspan fill="#484f58"> │ </tspan><tspan fill="#dcdcdc">✍ 8%</tspan><tspan fill="#484f58"> │ </tspan><tspan fill="#56b6c2">cc-pacer</tspan><tspan fill="#00af50"> (main)</tspan><tspan fill="#484f58"> │ </tspan><tspan fill="#00af50">+194</tspan><tspan fill="#484f58">/</tspan><tspan fill="#ff5555">-18</tspan><tspan fill="#484f58"> │ </tspan><tspan fill="#8b949e">◑ medium</tspan><tspan fill="#484f58"> │ </tspan><tspan fill="#dcdcdc">🎙</tspan><tspan fill="#00af50">●</tspan><tspan fill="#dcdcdc"> 🖥</tspan><tspan fill="#f85149">●</tspan>
   </text>
 
   <!-- current meter -->
