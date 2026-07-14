@@ -1,6 +1,6 @@
 {
   "name": "cc-pacer",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Know your pace before you hit the wall — a Claude Code statusline for usage rate, pace projection, and cost.",
   "bin": {
     "cc-pacer": "./bin/install.js"

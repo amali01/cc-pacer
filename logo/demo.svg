@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 250" font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace" role="img" aria-label="cc-pacer statusline demo">
+  <title>cc-pacer statusline demo</title>
+  <defs>
+    <clipPath id="fillCurrent"><rect x="143" y="113" width="0" height="24">
+      <animate attributeName="width" values="0;154;154;0" keyTimes="0;0.25;0.9;1" dur="6s" repeatCount="indefinite"/>
+    </rect></clipPath>
+    <clipPath id="fillWeekly"><rect x="143" y="158" width="0" height="24">
+      <animate attributeName="width" values="0;168;168;0" keyTimes="0;0.28;0.9;1" dur="6s" repeatCount="indefinite"/>
+    </rect></clipPath>
+  </defs>
+
+  <!-- terminal window -->
+  <rect x="10" y="10" width="880" height="230" rx="11" fill="#0d1117" stroke="#30363d" stroke-width="1.5"/>
+  <circle cx="34" cy="34" r="6" fill="#ff5f56"/>
+  <circle cx="54" cy="34" r="6" fill="#ffbd2e"/>
+  <circle cx="74" cy="34" r="6" fill="#27c93f"/>
+  <text x="450" y="39" text-anchor="middle" font-size="13" fill="#6e7781">cc-pacer</text>
+
+  <!-- line 1 -->
+  <text x="30" y="80" font-size="19">
+    <tspan fill="#0099ff">Opus 4.8</tspan><tspan fill="#484f58"> │ </tspan><tspan fill="#dcdcdc">✍ 8%</tspan><tspan fill="#484f58"> │ </tspan><tspan fill="#56b6c2">cc-pacer</tspan><tspan fill="#00af50"> (main)</tspan><tspan fill="#484f58"> │ </tspan><tspan fill="#00af50">+194</tspan><tspan fill="#484f58">/</tspan><tspan fill="#ff5555">-18</tspan><tspan fill="#484f58"> │ </tspan><tspan fill="#8b949e">◑ medium</tspan>
+  </text>
+
+  <!-- current meter -->
+  <text x="30" y="132" font-size="19" fill="#dcdcdc">current</text>
+  <g fill="#3a3f45"><!-- track -->
+    <circle cx="150" cy="125" r="7"/><circle cx="174" cy="125" r="7"/><circle cx="198" cy="125" r="7"/><circle cx="222" cy="125" r="7"/><circle cx="246" cy="125" r="7"/><circle cx="270" cy="125" r="7"/><circle cx="294" cy="125" r="7"/><circle cx="318" cy="125" r="7"/><circle cx="342" cy="125" r="7"/><circle cx="366" cy="125" r="7"/>
+  </g>
+  <g fill="#e3b341" clip-path="url(#fillCurrent)"><!-- fill -->
+    <circle cx="150" cy="125" r="7"/><circle cx="174" cy="125" r="7"/><circle cx="198" cy="125" r="7"/><circle cx="222" cy="125" r="7"/><circle cx="246" cy="125" r="7"/><circle cx="270" cy="125" r="7"/><circle cx="294" cy="125" r="7"/><circle cx="318" cy="125" r="7"/><circle cx="342" cy="125" r="7"/><circle cx="366" cy="125" r="7"/>
+  </g>
+  <text x="390" y="132" font-size="19" fill="#e3b341">67%</text>
+  <text x="437" y="132" font-size="19" fill="#e3b341" opacity="0">→120%
+    <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.25;0.33;0.9;1" dur="6s" repeatCount="indefinite"/>
+  </text>
+  <text x="540" y="132" font-size="19"><tspan fill="#6e7781">⟳ </tspan><tspan fill="#dcdcdc">2:50am</tspan><tspan fill="#6e7781"> · </tspan><tspan fill="#dcdcdc">$81</tspan><tspan fill="#e3b341"> 🔥 $16/hr</tspan></text>
+
+  <!-- weekly meter -->
+  <text x="30" y="177" font-size="19" fill="#dcdcdc">weekly</text>
+  <g fill="#3a3f45">
+    <circle cx="150" cy="170" r="7"/><circle cx="174" cy="170" r="7"/><circle cx="198" cy="170" r="7"/><circle cx="222" cy="170" r="7"/><circle cx="246" cy="170" r="7"/><circle cx="270" cy="170" r="7"/><circle cx="294" cy="170" r="7"/><circle cx="318" cy="170" r="7"/><circle cx="342" cy="170" r="7"/><circle cx="366" cy="170" r="7"/>
+  </g>
+  <g fill="#e3b341" clip-path="url(#fillWeekly)">
+    <circle cx="150" cy="170" r="7"/><circle cx="174" cy="170" r="7"/><circle cx="198" cy="170" r="7"/><circle cx="222" cy="170" r="7"/><circle cx="246" cy="170" r="7"/><circle cx="270" cy="170" r="7"/><circle cx="294" cy="170" r="7"/><circle cx="318" cy="170" r="7"/><circle cx="342" cy="170" r="7"/><circle cx="366" cy="170" r="7"/>
+  </g>
+  <text x="390" y="177" font-size="19" fill="#e3b341">73%</text>
+  <text x="437" y="177" font-size="19" fill="#e3b341" opacity="0">→124%
+    <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.28;0.36;0.9;1" dur="6s" repeatCount="indefinite"/>
+  </text>
+  <text x="540" y="177" font-size="19"><tspan fill="#6e7781">⟳ </tspan><tspan fill="#dcdcdc">jul 16, 10:00pm</tspan><tspan fill="#6e7781"> · </tspan><tspan fill="#dcdcdc">$100</tspan></text>
+
+  <!-- month line -->
+  <text x="30" y="217" font-size="19"><tspan fill="#dcdcdc">month   </tspan><tspan fill="#dcdcdc">$100</tspan><tspan fill="#6e7781"> api-equiv · today </tspan><tspan fill="#dcdcdc">$12</tspan></text>
+  <rect x="250" y="204" width="10" height="17" fill="#dcdcdc">
+    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.5;1" dur="1.1s" repeatCount="indefinite"/>
+  </rect>
+</svg>

@@ -9,6 +9,10 @@
 
 <p align="center"><em>Know your pace before you hit the wall.</em></p>
 
+<p align="center">
+  <img src="logo/demo.svg" alt="cc-pacer statusline demo" width="700">
+</p>
+
 Configure your Claude Code statusline to show limits, cost, directory and git info
 
 
@@ -30,16 +34,8 @@ Costs are estimates computed locally from your transcripts (tokens × current AP
 
 ## Install
 
-One-liner, no checkout needed:
-
 ```bash
 npx cc-pacer
-```
-
-Or from a checkout of this repo:
-
-```bash
-node bin/install.js
 ```
 
 It backups your old status line if any and copies the status line script to `~/.claude/cc-pacer.sh` and configures your Claude Code settings.
